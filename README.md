@@ -1,97 +1,95 @@
 # Real-Time Reaction Time Tester
 
-This project is a terminal-based reaction time tester using **Pygame**. It introduces students to interactive game design using object-oriented principles and real-time graphical rendering.
+A Pygame-based reaction time testing game developed as part of the lab assignment. The project was enhanced using an iterative AI-assisted debugging and development process.
 
 ---
 
-## What’s Provided
+## Project Overview
 
-A partially working version of a reaction time tester with:
+The Reaction Time Tester challenges the player to react as quickly as possible when the screen changes from a waiting state to a green **GO** state.
 
-- A grey "wait" screen that turns green at a random moment
-- Click (or press `Space`) as fast as possible once it turns green
-- A running average reaction time and round counter
-
-You are expected to **analyze**, **interact with an AI assistant**, and **complete/fix** the game to make it fully functional.
-
-### **Use an LLM (e.g. ChatGPT or Claude) as your debugging and pair-programming partner for this lab.**
+The original project had issues with reaction-time measurement and early input handling. The game was enhanced to provide accurate timing, false-start detection, a results screen, difficulty selection, replay functionality, and sound feedback.
 
 ---
 
-## Getting Started
-
-### Setup
-
-1. Clone the repo or download the project folder.
-2. Make sure you have Python 3.10+ installed.
-3. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-4. Run the game:
-
-```bash
-python main.py
-```
-
----
-
-## Tasks to Complete
-
-Each task must be completed using an iterative process involving LLM suggestions and your critical code review.
+## Features Implemented
 
 ### Task 1: Refine Input Timing Detection
 
-> Reaction times are measured from when the round *started*, not from when the screen actually turned green - so every recorded time is inflated by however long the wait phase lasted, and clicking during the grey "wait" screen gets timed and recorded exactly like a real reaction instead of being flagged as a false start. Investigate and enhance input handling so only genuine reactions after "go" are recorded, measured from the moment "go" happened.
+- Reaction time is measured from the exact moment the screen turns green.
+- Clicking or pressing `Space` before the green signal is detected as a **False Start**.
+- False starts are not recorded as valid reaction times.
+- Valid reactions are displayed in milliseconds.
 
+### Task 2: Game Over and Results Screen
 
-### Task 2: Implement Game Over Condition
+After completing all rounds, the game displays a dedicated **Game Over** screen containing:
 
-> Add a screen that displays the final results (every reaction time and the average) once all rounds are complete, then gracefully waits for input instead of just printing to the console.
+- Individual reaction time for every round
+- Average reaction time
+- Selected difficulty
+- Replay option
+- Difficulty-change option
 
+The game no longer depends only on terminal output for final results.
 
-### Task 3: Add Replay Option
+### Task 3: Difficulty Selection and Replay
 
-> After the results screen, allow the user to play again by choosing a difficulty (Easy, Medium, or Hard wait-time range/round count), or exit.
+The player can select:
 
+- **Easy** — 1500–3500 ms wait time
+- **Medium** — 1000–3000 ms wait time
+- **Hard** — 500–2000 ms wait time
 
-### Task 4: Add Sound Feedback
+Controls:
 
-> Add basic sound effects for the "go" cue, a false start, and the session ending.
+- `1` → Easy
+- `2` → Medium
+- `3` → Hard
+- `R` → Replay using the same difficulty
+- `D` → Return to difficulty selection
+- Mouse click or `Space` → React during a round
 
+### Task 4: Sound Feedback
+
+Sound effects were added for important game events:
+
+- **GO cue** when the screen turns green
+- **Success sound** after a valid reaction
+- **False-start warning**
+- **Game-over sound** when the session ends
+
+The sounds are generated programmatically using Pygame's mixer, so separate audio files are not required.
 
 ---
 
-## Expected Behavior
+## Expected Game Flow
 
-- Each round starts with a grey screen for a random, unpredictable delay
-- The screen turns green at a random moment, at which point the player should click or press `Space` as fast as possible
-- Reacting after "go" records and displays that round's reaction time in milliseconds
-- Reacting before "go" should be treated as a false start rather than a valid time
-- After a short pause, the next round begins automatically; the session ends after the configured number of rounds
-
----
-
-## Folder Structure
-
-```
-reaction-time-tester-main/
-├── main.py
-├── requirements.txt
-├── game/
-│   ├── game_engine.py
-│   └── round.py
-└── README.md
-```
-
----
-
-## Submission Checklist
-
-Submission is only the following three things:
-
-- [] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
-- [] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
-- [] The Chat/LLM used page link, with the complete chat history
+```text
+Difficulty Selection
+        ↓
+Choose Easy / Medium / Hard
+        ↓
+Waiting Screen
+        ↓
+Screen turns Green + GO Sound
+        ↓
+Player Clicks / Presses Space
+        ↓
+ ┌───────────────────────┐
+ │                       │
+Valid Reaction       Early Input
+ │                       │
+ ↓                       ↓
+Reaction Time        False Start
+Recorded             Detected
+ │                       │
+ └───────────┬───────────┘
+             ↓
+        Next Round
+             ↓
+       All Rounds Done
+             ↓
+        Game Over
+             ↓
+    Replay / Change Difficulty
